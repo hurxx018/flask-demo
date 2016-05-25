@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect
 
 import requests
-#from bokeh.plotting import figure #, output_file, 
-#from bokeh.embed import components
-import bokeh
+from bokeh.plotting import figure  
+from bokeh.embed import components
+
 import pandas as pd
 
 app = Flask(__name__)
@@ -35,13 +35,13 @@ def graph():
     df = pd.DataFrame(data=raw_data['data'], columns=raw_data['column_names'])
         
     # Bokeh application
-    p = bokeh.plotting.figure(title = 'Data from Quandle WIKI set',
+    p = figure(title = 'Data from Quandle WIKI set',
                 x_axis_label = 'date',
                 x_axis_type = 'datetime')
     lg = '%s: %s  ' % (app.vars['ticker'], app.vars['features'][0])
     p.line(pd.to_datetime(df['Date']), df[app.vars['features'][0]], 
                           line_color='blue', line_width=1.2, legend=lg)
-    script, div = bokeh.embed.components(p)
+    script, div = components(p)
 
     subt = 'Generated graph for %s' % app.vars['ticker']
     return render_template('graph.html', script=script, div=div, subtitle=subt) 
